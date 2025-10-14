@@ -8,22 +8,28 @@
 import SwiftUI
 import AVKit
 
+
 struct VideoPlayerFeedView: View {
     let videos: [Video]
-    @State var startIndex: Int
+    @State var currentIndex: Int
 
     var body: some View {
-        TabView(selection: $startIndex) {
-            ForEach(videos.indices, id: \.self) { index in
-                VideoPlayerView(video: videos[index])
-                    .tag(index)
+        GeometryReader { geometry in
+            ScrollViewReader { scrollProxy in
+                ScrollView(.vertical, showsIndicators: false) {
+                    LazyVStack(spacing: 0) {
+                        ForEach(videos.indices, id: \.self) { index in
+                            VideoPlayerView(video: videos[index])
+                                .frame(width: geometry.size.width, height: geometry.size.height)
+                                .id(index)
+                        }
+                    }
+                }
+                .onAppear {
+                    scrollProxy.scrollTo(currentIndex, anchor: .top)
+                }
             }
         }
-        .tabViewStyle(.page(indexDisplayMode: .never))
-        .rotationEffect(.degrees(-90))
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .rotationEffect(.degrees(90))
         .ignoresSafeArea()
     }
 }
-

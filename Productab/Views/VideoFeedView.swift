@@ -23,7 +23,7 @@ struct VideoFeedView: View {
                         LazyVStack(spacing: 16) {
                             ForEach(Array(viewModel.videos.enumerated()), id: \.offset) { index, video in
                                 NavigationLink(
-                                    destination: VideoPlayerFeedView(videos: viewModel.videos, startIndex: index)
+                                    destination: VideoPlayerFeedView(videos: viewModel.videos, currentIndex: index)
                                 ) {
                                     VideoCellView(video: video)
                                 }
