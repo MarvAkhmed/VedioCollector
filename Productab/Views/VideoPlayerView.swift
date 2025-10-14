@@ -4,35 +4,48 @@
 //
 //  Created by Marwa Awad on 15.10.2025.
 //
+// VideoPlayerView.swift
 import SwiftUI
 import AVKit
 
 struct VideoPlayerView: View {
-    let videoURL: String
-
+    let video: Video
     @State private var player: AVPlayer?
 
     var body: some View {
-        GeometryReader { geometry in
-            if let player = player {
-                VideoPlayer(player: player)
-                    .frame(width: geometry.size.width, height: geometry.size.height)
+        ZStack {
+            if let url = URL(string: video.video_url) {
+                VideoPlayer(player: AVPlayer(url: url))
                     .onAppear {
-                        player.play()
+                        player = AVPlayer(url: url)
+                        player?.play()
                     }
                     .onDisappear {
-                        player.pause()
+                        player?.pause()
+                        player = nil
                     }
+                    .ignoresSafeArea()
             } else {
-                ProgressView("Loading video...")
-                    .frame(width: geometry.size.width, height: geometry.size.height)
-                    .onAppear {
-                        if let url = URL(string: videoURL) {
-                            player = AVPlayer(url: url)
-                        }
+                Color.black
+                Text("Video not available")
+                    .foregroundColor(.white)
+            }
+
+            VStack {
+                Spacer()
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text(video.title ?? "")
+                            .font(.title3)
+                            .bold()
+                            .foregroundColor(.white)
+                        Text("@\(video.author ?? "")")
+                            .foregroundColor(.white.opacity(0.8))
                     }
+                    Spacer()
+                }
+                .padding()
             }
         }
-        .edgesIgnoringSafeArea(.all)
     }
 }
