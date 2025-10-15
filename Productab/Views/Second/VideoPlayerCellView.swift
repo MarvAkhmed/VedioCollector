@@ -139,6 +139,7 @@ struct VideoPlayerCellView: View {
             }
             .frame(width: 80, height: 100)
             
+            
             // Text content
             VStack(alignment: .leading, spacing: 6) {
                 // Author name
@@ -148,7 +149,23 @@ struct VideoPlayerCellView: View {
                         .foregroundColor(.white)
                 }
                 
-            
+                HStack(spacing: 4) {
+                         Image(uiImage: Icons.currentLocaionIcon ?? UIImage()) 
+                             .resizable()
+                             .aspectRatio(contentMode: .fit)
+                             .frame(width: 16, height: 16)
+                             .foregroundColor(.white)
+                         
+                         if let location = vm.video.location {
+                             Text(location)
+                                 .font(.system(size: 14, weight: .regular))
+                                 .foregroundColor(.white)
+                         } else {
+                             Text("Россия, Сочи")
+                                 .font(.system(size: 14, weight: .regular))
+                                 .foregroundColor(.white)
+                         }
+                     }
                 
                 // Description
                 if let description = vm.video.description {
