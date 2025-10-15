@@ -140,7 +140,8 @@ struct VideoCell: View {
     private func reactionIcons() -> some View {
         HStack(spacing: 12) {
             VStack(spacing: 6) {
-                if let tags = video.tags, !tags.isEmpty {
+                let tags = video.tags
+                if  !tags.isEmpty {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 6) {
                             ForEach(tags.prefix(5), id: \.self) { tag in

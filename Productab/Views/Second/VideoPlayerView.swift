@@ -29,9 +29,8 @@ struct VideooPlayerView: View {
             let maxOffset = CGFloat(videos.count - 1) * itemHeight
             
             ZStack {
-                // Video layers
                 ForEach(Array(videos.enumerated()), id: \.offset) { index, video in
-                    SingleVideoView(
+                    VideoPlayerCellView(
                         video: video,
                         player: getOrCreatePlayer(for: index),
                         isMuted: $isMuted,
@@ -43,7 +42,7 @@ struct VideooPlayerView: View {
             }
             .frame(width: proxy.size.width, height: proxy.size.height, alignment: .top)
             .clipped()
-            .contentShape(Rectangle()) // Make entire area tappable
+            .contentShape(Rectangle()) 
             .gesture(
                 DragGesture()
                     .onChanged { value in
@@ -172,76 +171,5 @@ struct VideooPlayerView: View {
             player.replaceCurrentItem(with: nil)
         }
         players.removeAll()
-    }
-}
-
-struct SingleVideoView: View {
-    let video: Video
-    let player: AVPlayer
-    @Binding var isMuted: Bool
-    let isActive: Bool
-    
-    @State private var isPlaying = false
-    
-    var body: some View {
-        ZStack {
-            // Video Player
-            VideoPlayer(player: player)
-                .disabled(true)
-                .ignoresSafeArea()
-                .onChange(of: isActive) { oldValue, newValue in
-                    handleActiveStateChange(isActive: newValue)
-                }
-                .onChange(of: isMuted) { oldValue, newValue in
-                    player.isMuted = newValue
-                }
-                .onAppear {
-                    handleActiveStateChange(isActive: isActive)
-                }
-
-            // Overlay UI
-            VStack {
-                Spacer()
-                HStack {
-                    Spacer()
-                    Button {
-                        isMuted.toggle()
-                    } label: {
-                        Image(systemName: isMuted ? "speaker.slash.fill" : "speaker.wave.2.fill")
-                            .font(.system(size: 25))
-                            .foregroundColor(.white)
-                            .padding(12)
-                            .background(Color.black.opacity(0.4))
-                            .clipShape(Circle())
-                    }
-                    .padding(.trailing, 16)
-                    .padding(.bottom, 16)
-                }
-            }
-        }
-        .onTapGesture {
-            togglePlayPause()
-        }
-    }
-    
-    private func handleActiveStateChange(isActive: Bool) {
-        if isActive {
-            player.isMuted = isMuted
-            player.play()
-            isPlaying = true
-        } else {
-            player.pause()
-            isPlaying = false
-        }
-    }
-    
-    private func togglePlayPause() {
-        if player.rate > 0 {
-            player.pause()
-            isPlaying = false
-        } else {
-            player.play()
-            isPlaying = true
-        }
     }
 }

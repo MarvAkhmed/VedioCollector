@@ -4,12 +4,7 @@
 //
 //  Created by Marwa Awad on 14.10.2025.
 //
-//
-//  APIService.swift
-//  Productab
-//
-//  Created by Marwa Awad on 14.10.2025.
-//
+
 
 import Foundation
 import Combine
@@ -126,7 +121,7 @@ struct Video: Identifiable {
     let videoUrl: String
     let author: String
     let location: String?
-    let tags: [String]?
+    let tags: [String]
     let likes: Int?
     let views: Int
     let comments: Int?
@@ -143,7 +138,7 @@ struct Video: Identifiable {
         self.videoUrl = "https://interesnoitochka.ru/api/v1/videos/video/\(item.videoId)/hls/playlist.m3u8"
         self.author = item.channelName
         self.location = item.locationText
-        self.tags = item.tags
+        self.tags = item.tags ?? ["tags", "not", "found"]
         self.likes = item.numbersLikes ?? 0 // Mock data needed
         self.views = item.numbersViews
         self.comments = item.numbersComments ?? 0 // Mock data needed
