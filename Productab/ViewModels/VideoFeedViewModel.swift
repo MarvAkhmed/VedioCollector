@@ -19,7 +19,7 @@ class VideoFeedViewModel: ObservableObject {
         isLoading = true
         errorMessage = nil
 
-        APIService.shared.fetchVideos()
+        APIService.shared.fetchShortVideos()
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 self.isLoading = false
