@@ -53,16 +53,15 @@ struct VideoPlayerView: View {
     }
 }
 
-
 struct TikTokInsideFeedView: View {
     let videos: [Video]
     @State private var currentIndex: Int
-
+    
     init(videos: [Video], startIndex: Int) {
         self.videos = videos
         _currentIndex = State(initialValue: startIndex)
     }
-
+    
     var body: some View {
         TabView(selection: $currentIndex) {
             ForEach(videos.indices, id: \.self) { index in
@@ -71,9 +70,7 @@ struct TikTokInsideFeedView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
-        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-        
-        .ignoresSafeArea()
-
+        .tabViewStyle(.page(indexDisplayMode: .never))
+        .indexViewStyle(.page(backgroundDisplayMode: .never))
     }
 }
