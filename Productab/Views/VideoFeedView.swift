@@ -4,37 +4,46 @@
 //
 //  Created by Marwa Awad on 15.10.2025.
 //
-// VideoFeedView.swift
+
 import SwiftUI
 
 struct VideoFeedView: View {
     @StateObject private var viewModel = VideoFeedViewModel()
+    @State private var selectedVideoIndex: Int? = nil
 
     var body: some View {
         NavigationView {
-            Group {
+            GeometryReader { geometry in
                 if viewModel.isLoading {
                     ProgressView("Loading videos...")
+                        .frame(width: geometry.size.width, height: geometry.size.height)
                 } else if let error = viewModel.errorMessage {
                     Text("Error: \(error)")
                         .foregroundColor(.red)
+                        .frame(width: geometry.size.width, height: geometry.size.height)
+                } else if viewModel.videos.isEmpty {
+                    Text("No videos found")
+                        .frame(width: geometry.size.width, height: geometry.size.height)
                 } else {
                     ScrollView {
                         LazyVStack(spacing: 16) {
-                            ForEach(Array(viewModel.videos.enumerated()), id: \.offset) { index, video in
+                            ForEach(viewModel.videos.indices, id: \.self) { index in
+                                let video = viewModel.videos[index]
                                 NavigationLink(
-                                    destination: VideoPlayerFeedView(videos: viewModel.videos, currentIndex: index)
-                                ) {
-                                    VideoCellView(video: video)
-                                }
-                                .buttonStyle(.plain)
+                                    destination: TikTokInsideFeedView(videos: viewModel.videos, startIndex: index),
+                                    label: {
+                                        VideoCellView(video: video)
+                                            .frame(height: geometry.size.height * 0.6)
+                                            .clipped()
+                                    }
+                                )
                             }
                         }
                         .padding()
                     }
                 }
             }
-            .navigationTitle("Shorts")
+            .navigationBarHidden(true)
             .onAppear {
                 viewModel.fetchVideos()
             }

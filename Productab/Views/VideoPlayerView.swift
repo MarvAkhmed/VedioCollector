@@ -4,10 +4,12 @@
 //
 //  Created by Marwa Awad on 15.10.2025.
 //
-// VideoPlayerView.swift
+
 import SwiftUI
 import AVKit
 
+
+// MARK: - Single Video Player with autoplay
 struct VideoPlayerView: View {
     let video: Video
     @State private var player: AVPlayer?
@@ -15,16 +17,16 @@ struct VideoPlayerView: View {
     var body: some View {
         ZStack {
             if let url = URL(string: video.video_url) {
-                VideoPlayer(player: AVPlayer(url: url))
+                VideoPlayer(player: player)
                     .onAppear {
                         player = AVPlayer(url: url)
                         player?.play()
+                        player?.isMuted = false
                     }
                     .onDisappear {
                         player?.pause()
                         player = nil
                     }
-                    .ignoresSafeArea()
             } else {
                 Color.black
                 Text("Video not available")
@@ -34,9 +36,9 @@ struct VideoPlayerView: View {
             VStack {
                 Spacer()
                 HStack {
-                    VStack(alignment: .leading) {
+                    VStack(alignment: .leading, spacing: 4) {
                         Text(video.title ?? "")
-                            .font(.title3)
+                            .font(.title)
                             .bold()
                             .foregroundColor(.white)
                         Text("@\(video.author ?? "")")
@@ -47,5 +49,31 @@ struct VideoPlayerView: View {
                 .padding()
             }
         }
+        .ignoresSafeArea()
+    }
+}
+
+
+struct TikTokInsideFeedView: View {
+    let videos: [Video]
+    @State private var currentIndex: Int
+
+    init(videos: [Video], startIndex: Int) {
+        self.videos = videos
+        _currentIndex = State(initialValue: startIndex)
+    }
+
+    var body: some View {
+        TabView(selection: $currentIndex) {
+            ForEach(videos.indices, id: \.self) { index in
+                VideoPlayerView(video: videos[index])
+                    .tag(index)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+        }
+        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+        
+        .ignoresSafeArea()
+
     }
 }
