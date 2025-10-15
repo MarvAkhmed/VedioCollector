@@ -9,7 +9,21 @@
 import Foundation
 import Combine
 
-// MARK: - Correct Response Models based on ACTUAL API response
+
+struct TagResponse: Codable {
+    let items: [TagItem]
+    let total: Int
+    let offset: Int
+    let limit: Int
+    let count: Int
+    let filter: [String: String]?
+}
+
+struct TagItem: Codable, Identifiable {
+    let id: Int
+    let tag: String
+}
+
 struct VideoResponse: Codable {
     let items: [VideoItem]
     let total: Int
@@ -147,9 +161,28 @@ struct Video: Identifiable {
         self.isVertical = item.vertical
         self.isFree = item.free
     }
-    
-    // Mock initializer with default mock data for missing fields
-    init(id: Int, title: String, description: String? = nil, thumbnailUrl: String, videoUrl: String, author: String, location: String? = nil, tags: [String]? = nil, likes: Int? = nil, views: Int, comments: Int? = nil, duration: Int, authorAvatarUrl: String? = nil, isVertical: Bool = true, isFree: Bool = true) {
+}
+
+
+// Add this to your Video struct in APIService.swift
+extension Video {
+    init(
+        id: Int,
+        title: String,
+        description: String? = nil,
+        thumbnailUrl: String,
+        videoUrl: String,
+        author: String,
+        location: String? = nil,
+        tags: [String],
+        likes: Int? = nil,
+        views: Int,
+        comments: Int? = nil,
+        duration: Int,
+        authorAvatarUrl: String? = nil,
+        isVertical: Bool,
+        isFree: Bool
+    ) {
         self.id = id
         self.title = title
         self.description = description
@@ -157,10 +190,10 @@ struct Video: Identifiable {
         self.videoUrl = videoUrl
         self.author = author
         self.location = location
-        self.tags = tags ?? ["interesting", "funny"] // Mock tags
-        self.likes = likes ?? Int.random(in: 100...5000) // Mock likes
+        self.tags = tags
+        self.likes = likes
         self.views = views
-        self.comments = comments ?? Int.random(in: 5...200) // Mock comments
+        self.comments = comments
         self.duration = duration
         self.authorAvatarUrl = authorAvatarUrl
         self.isVertical = isVertical

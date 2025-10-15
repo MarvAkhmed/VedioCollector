@@ -42,10 +42,12 @@ struct VideoPlayerCellView: View {
                     listTags()
                     listWhoReacted()
                     commentsSectionBuilder()
+                        .padding(.bottom,  70)
                 }
                 .padding(.horizontal)
             }
-        } .navigationBarHidden(true)
+        }
+        .navigationBarHidden(true)
     }
     
     @ViewBuilder
@@ -239,10 +241,18 @@ struct VideoPlayerCellView: View {
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 16, height: 16)
             
+          
+            
             Text("RAMEN")
                 .font(Fonts.robotoBold11)
                 .foregroundColor(.white)
             
+            Image(uiImage: Icons.upArrowIcon ?? UIImage())
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 16, height: 16)
+                .padding(.leading, 5)
+                .padding(.trailing, 5)
             Image(uiImage: Icons.vidioIcon ?? UIImage())
                 .resizable()
                 .aspectRatio(contentMode: .fit)
@@ -252,10 +262,7 @@ struct VideoPlayerCellView: View {
                 .font(Fonts.robotoBold11)
                 .foregroundColor(.white)
             
-            Image(uiImage: Icons.upArrowIcon ?? UIImage())
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 16, height: 16)
+         
         }
     }
     @ViewBuilder

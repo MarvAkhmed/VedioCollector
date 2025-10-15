@@ -31,7 +31,7 @@ struct VideoFeedView: View {
             }
             .onAppear {
                 if viewModel.videos.isEmpty {
-                    viewModel.fetchVideos()
+                    viewModel.fetchVideosWithTags()
                 }
             }
         }
@@ -62,7 +62,7 @@ struct VideoFeedView: View {
             Text("Error: \(error)")
                 .foregroundColor(.red)
             Button("Retry") {
-                viewModel.fetchVideos()
+                viewModel.fetchVideosWithTags()
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
