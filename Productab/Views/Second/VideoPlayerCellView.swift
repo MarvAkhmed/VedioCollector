@@ -11,14 +11,16 @@ import AVKit
 struct VideoPlayerCellView: View {
 
     @ObservedObject private var vm: VideoPlayerCellViewModel
-     
-    init(video: Video, player: AVPlayer, isMuted: Binding<Bool>, isActive: Bool) {
+    let onBack: () -> Void
+    
+    init(video: Video, player: AVPlayer, isMuted: Binding<Bool>, isActive: Bool, onBack: @escaping () -> Void) {
         _vm = ObservedObject(wrappedValue: VideoPlayerCellViewModel(
             video: video,
             player: player,
             isMuted: isMuted.wrappedValue,
             isActive: isActive
         ))
+        self.onBack = onBack
     }
     var body: some View {
         ZStack {
@@ -43,20 +45,49 @@ struct VideoPlayerCellView: View {
                 }
                 .padding(.horizontal)
             }
-        }
+        } .navigationBarHidden(true)
     }
     
     @ViewBuilder
     private func buildVideoPlayer() -> some View {
-        VideoPlayer(player: vm.player)
-            .disabled(true)
-            .ignoresSafeArea()
-            .onChange(of: vm.isActive) { oldValue, newValue in
-                vm.handleActiveStateChange(isActive: newValue)
+        ZStack {
+            VideoPlayer(player: vm.player)
+                .disabled(true)
+                .ignoresSafeArea()
+                .onChange(of: vm.isActive) { oldValue, newValue in
+                    vm.handleActiveStateChange(isActive: newValue)
+                }
+                .onAppear {
+                    vm.handleActiveStateChange(isActive: vm.isActive)
+                }
+            
+            VStack {
+                HStack {
+                    // Back icon
+                    Button(action: {
+                        onBack()
+                    }) {
+                        Image(uiImage: Icons.backIcon ?? UIImage())
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 24, height: 24)
+                            .padding(.top, 60)
+                            .padding(.leading, 20)
+                    }
+                    
+                    Spacer()
+                    
+                    // Share icon
+                    Image(uiImage: Icons.shareIcon ?? UIImage())
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 24, height: 24)
+                        .padding(.top, 60)
+                        .padding(.trailing, 20)
+                }
+                Spacer()
             }
-            .onAppear {
-                vm.handleActiveStateChange(isActive: vm.isActive)
-            }
+        }
     }
     
     @ViewBuilder

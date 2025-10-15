@@ -22,7 +22,9 @@ final class Icons {
     static let friendsWatching = UIImage(named: "Union")
     static let allPeopleWatching = UIImage(named: "Rectangle 511 (Stroke)")
     
-    static let shareIcon = UIImage(named: "ShareIcon")
+
     static let liveIcon = UIImage(named: "liveIcon")
     static let currentLocaionIcon = UIImage(named: "Subtract")
+    static let shareIcon = UIImage(named: "ShareIcon")
+    static let backIcon = UIImage(named: "backIcon")
 }

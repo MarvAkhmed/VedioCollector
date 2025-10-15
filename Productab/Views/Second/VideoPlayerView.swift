@@ -1,4 +1,3 @@
-
 //  VideooPlayerView.swift - FIXED CUSTOM VERTICAL PAGING
 //  Productab
 //
@@ -13,6 +12,7 @@ struct VideooPlayerView: View {
     @State private var currentIndex: Int
     @State private var players: [AVPlayer] = []
     @State private var isMuted = false
+    @Environment(\.dismiss) var dismiss // ADD THIS for back navigation
     
     @State private var offset: CGFloat = 0
     @State private var isDragging = false
@@ -34,7 +34,10 @@ struct VideooPlayerView: View {
                         video: video,
                         player: getOrCreatePlayer(for: index),
                         isMuted: $isMuted,
-                        isActive: currentIndex == index
+                        isActive: currentIndex == index,
+                        onBack: { // ADD THIS CLOSURE
+                            dismiss() // Navigate back when back button is tapped
+                        }
                     )
                     .frame(width: proxy.size.width, height: itemHeight)
                     .offset(y: CGFloat(index) * itemHeight - offset)
@@ -42,7 +45,7 @@ struct VideooPlayerView: View {
             }
             .frame(width: proxy.size.width, height: proxy.size.height, alignment: .top)
             .clipped()
-            .contentShape(Rectangle()) 
+            .contentShape(Rectangle())
             .gesture(
                 DragGesture()
                     .onChanged { value in
@@ -108,6 +111,7 @@ struct VideooPlayerView: View {
             cleanupPlayers()
         }
         .ignoresSafeArea()
+        .navigationBarHidden(true) // ADD THIS to hide system navigation
     }
     
     private func handleVideoTransition(from oldIndex: Int, to newIndex: Int) {
