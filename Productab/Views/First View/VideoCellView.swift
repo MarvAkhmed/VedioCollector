@@ -55,9 +55,7 @@ struct VideoCell: View {
     @ViewBuilder
     private func buildUpperSection() -> some View {
         HStack(alignment: .top, spacing: 12) {
-            // Profile picture with live indicator on the stroke
             ZStack {
-                // Profile image - RECTANGLE
                 AsyncImage(url: URL(string: vm.video.authorAvatarUrl ?? "")) { image in
                     image
                         .resizable()

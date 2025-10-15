@@ -1,4 +1,3 @@
-//
 //  VideoFeedView.swift
 //  Productab
 //
@@ -15,11 +14,14 @@ struct VideoFeedView: View {
 
     var body: some View {
         NavigationStack(path: $navigationPath) {
-            ZStack(alignment: .bottom) {
-                Color.black
-                    .ignoresSafeArea()
-                
-                mainContent
+            GeometryReader { geometry in // ADD THIS GeometryReader
+                ZStack(alignment: .bottom) {
+                    Color.black
+                        .ignoresSafeArea()
+                    
+                    mainContent
+                    CustomTabBar(selectedTab: $selectedTab, geometry: geometry)
+                }
             }
             .navigationBarHidden(true)
             .navigationDestination(for: Int.self) { index in
@@ -34,6 +36,7 @@ struct VideoFeedView: View {
             }
         }
     }
+
     
     @ViewBuilder
     private var mainContent: some View {

@@ -27,4 +27,11 @@ final class Icons {
     static let currentLocaionIcon = UIImage(named: "Subtract")
     static let shareIcon = UIImage(named: "ShareIcon")
     static let backIcon = UIImage(named: "backIcon")
+    
+    
+    static let plusIcon = UIImage(named: "plus")!
+    static let commentsIcon = UIImage(named: "chat-bubble-oval-left-ellipsis")!
+    static let profileIcon = UIImage(named: "avatar")!
+    static let bellIcon = UIImage(named: "bell")!
+    static let homeIcon = UIImage(named: "home")!
 }
