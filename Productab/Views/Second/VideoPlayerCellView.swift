@@ -25,7 +25,6 @@ struct VideoPlayerCellView: View {
     var body: some View {
         ZStack {
             buildVideoPlayer()
-        
     
             VStack {
                 buildUpperSection()
@@ -95,9 +94,7 @@ struct VideoPlayerCellView: View {
     @ViewBuilder
     private func buildUpperSection() -> some View {
         HStack(alignment: .top, spacing: 12) {
-            // Profile picture with live indicator on the stroke
             ZStack {
-                // Profile image - RECTANGLE
                 AsyncImage(url: URL(string: vm.video.authorAvatarUrl ?? "")) { image in
                     image
                         .resizable()
@@ -241,8 +238,6 @@ struct VideoPlayerCellView: View {
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 16, height: 16)
             
-          
-            
             Text("RAMEN")
                 .font(Fonts.robotoBold11)
                 .foregroundColor(.white)
@@ -261,10 +256,9 @@ struct VideoPlayerCellView: View {
             Text("12")
                 .font(Fonts.robotoBold11)
                 .foregroundColor(.white)
-            
-         
         }
     }
+    
     @ViewBuilder
     private func listTags() -> some View {
         let tags = vm.video.tags
@@ -277,91 +271,32 @@ struct VideoPlayerCellView: View {
             }
         }
     }
-    
     @ViewBuilder
     private func listWhoReacted() -> some View {
         HStack(spacing: 8) {
-            HStack(spacing: 6) {
-                Image(uiImage: Icons.firstReact ?? UIImage())
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 20, height: 20)
-                Text(vm.formatNumber(vm.video.views))
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundColor(.white)
-                    .fixedSize()
-            }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
-            .background(Color(red: 0, green: 0, blue: 0, opacity: 0.3))
-            .cornerRadius(20)
+            vm.metricView(icon: Icons.firstReact, value: vm.video.views)
+        
+            let likesValue = (vm.video.likes ?? 0) > 0 ? (vm.video.likes ?? 0) : 100000
+            vm.metricView(icon: Icons.secondReact, value: likesValue)
             
-            // Likes with heart icon
-            HStack(spacing: 6) {
-                Image(uiImage: Icons.secondReact ?? UIImage())
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 20, height: 20)
-                Text(vm.formatNumber(vm.video.likes ?? 0))
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundColor(.white)
-                    .fixedSize()
+            if (vm.video.comments ?? 0) > 0 {
+                vm.metricView(icon: Icons.thirdReact, value: vm.video.comments ?? 0)
             }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
-            .background(Color(red: 0, green: 0, blue: 0, opacity: 0.3))
-            .cornerRadius(20)
             
-            // Comments with comment icon
-            HStack(spacing: 6) {
-                Image(uiImage: Icons.thirdReact ?? UIImage())
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 20, height: 20)
-                Text(vm.formatNumber(vm.video.comments ?? 0))
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundColor(.white)
-                    .fixedSize()
+            let shareCount = vm.video.views / 10
+            if shareCount > 0 {
+                vm.metricView(icon: Icons.forthReact, value: shareCount)
             }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
-            .background(Color(red: 0, green: 0, blue: 0, opacity: 0.3))
-            .cornerRadius(20)
             
-            // Shares with share icon
-            HStack(spacing: 6) {
-                Image(uiImage: Icons.forthReact ?? UIImage())
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 20, height: 20)
-                Text(vm.formatNumber(vm.video.views / 10))
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundColor(.white)
-                    .fixedSize()
+            let fifthMetric = vm.video.views / 10
+            if fifthMetric > 0 {
+                vm.metricView(icon: Icons.fifthReact, value: fifthMetric)
             }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
-            .background(Color(red: 0, green: 0, blue: 0, opacity: 0.3))
-            .cornerRadius(20)
-            
-            // Fifth icon (bookmark or other)
-            HStack(spacing: 6) {
-                Image(uiImage: Icons.fifthReact ?? UIImage())
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 20, height: 20)
-                Text(vm.formatNumber(vm.video.views / 10))
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundColor(.white)
-                    .fixedSize()
-            }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
-            .background(Color(red: 0, green: 0, blue: 0, opacity: 0.3))
-            .cornerRadius(20)
         }
     }
-    
+
+
+
     @ViewBuilder
     private func commentsSectionBuilder() -> some View {
         ZStack(alignment: .trailing) {

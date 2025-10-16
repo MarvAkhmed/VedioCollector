@@ -32,7 +32,7 @@ class VideoPlayerCellViewModel: ObservableObject {
         if number >= 1000000 {
             return String(format: "%.1fM", Double(number) / 1000000.0)
         } else if number >= 1000 {
-            return String(format: "%.1fK", Double(number) / 1000.0)
+            return String(format: "%.0fK", Double(number) / 1000.0) 
         } else {
             return "\(number)"
         }
@@ -57,5 +57,22 @@ class VideoPlayerCellViewModel: ObservableObject {
             player.play()
             isPlaying = true
         }
+    }
+    
+    func metricView(icon: UIImage?, value: Int) -> some View {
+        HStack(spacing: 6) {
+            Image(uiImage: icon ?? UIImage())
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 20, height: 20)
+            Text(formatNumber(value))
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundColor(.white)
+                .fixedSize()
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .background(Color(red: 0, green: 0, blue: 0, opacity: 0.3))
+        .cornerRadius(20)
     }
 }

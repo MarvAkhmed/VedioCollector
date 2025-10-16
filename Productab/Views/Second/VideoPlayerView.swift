@@ -153,7 +153,6 @@ struct VideooPlayerView: View {
     
     private func getOrCreatePlayer(for index: Int) -> AVPlayer {
         guard index < players.count else {
-            // Create a placeholder player if index is out of bounds
             let player = AVPlayer()
             player.pause()
             return player
