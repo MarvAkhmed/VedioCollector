@@ -1,9 +1,3 @@
-//  VideoFeedView.swift
-//  Productab
-//
-//  Created by Marwa Awad on 15.10.2025.
-//
-
 import SwiftUI
 
 struct VideoFeedView: View {
@@ -14,7 +8,8 @@ struct VideoFeedView: View {
 
     var body: some View {
         NavigationStack(path: $navigationPath) {
-            GeometryReader { geometry in // ADD THIS GeometryReader
+            GeometryReader { geometry in
+                
                 ZStack(alignment: .bottom) {
                     Color.black
                         .ignoresSafeArea()
@@ -22,21 +17,20 @@ struct VideoFeedView: View {
                     mainContent
                     CustomTabBar(selectedTab: $selectedTab, geometry: geometry)
                 }
-            }
-            .navigationBarHidden(true)
-            .navigationDestination(for: Int.self) { index in
-                if index < viewModel.videos.count {
-                    VideooPlayerView(videos: viewModel.videos, startIndex: index)
+                .navigationBarHidden(true)
+                .navigationDestination(for: Int.self) { index in
+                    if index < viewModel.videos.count {
+                        VideooPlayerView(videos: viewModel.videos, startIndex: index)
+                    }
                 }
-            }
-            .onAppear {
-                if viewModel.videos.isEmpty {
-                    viewModel.fetchVideosWithTags()
+                .onAppear {
+                    if viewModel.videos.isEmpty {
+                        viewModel.fetchVideosWithTags()
+                    }
                 }
             }
         }
     }
-
     
     @ViewBuilder
     private var mainContent: some View {
@@ -47,7 +41,7 @@ struct VideoFeedView: View {
         } else if viewModel.videos.isEmpty {
             emptyView
         } else {
-            videoScrollView
+            optimizedVideoScrollView
         }
     }
     
@@ -64,6 +58,10 @@ struct VideoFeedView: View {
             Button("Retry") {
                 viewModel.fetchVideosWithTags()
             }
+            .foregroundColor(.white)
+            .padding()
+            .background(Color.blue)
+            .cornerRadius(8)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -74,16 +72,31 @@ struct VideoFeedView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     
-    private var videoScrollView: some View {
+    private var optimizedVideoScrollView: some View {
         ScrollView {
-            LazyVStack(spacing: 16) { // Increased spacing between cells
+            LazyVStack(spacing: 16) {
                 ForEach(viewModel.videos.indices, id: \.self) { index in
                     let video = viewModel.videos[index]
                     NavigationLink(value: index) {
                         VideoCell(vm: VideoCellViewModel(video: video))
-                            .padding(.horizontal, 16) // Add horizontal padding to each cell
+                            .padding(.horizontal, 16)
                     }
                     .buttonStyle(PlainButtonStyle())
+                    .onAppear {
+                        viewModel.videoDidBecomeVisible(index)
+                    }
+                    .onDisappear {
+                        viewModel.videoDidBecomeInvisible(index)
+                    }
+                }
+                
+                // Pagination indicator
+                if viewModel.hasMoreVideos {
+                    ProgressView()
+                        .padding()
+                        .onAppear {
+                            viewModel.loadMoreVideosIfNeeded()
+                        }
                 }
             }
             .padding(.vertical, 8)

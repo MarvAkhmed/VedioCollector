@@ -25,7 +25,7 @@ struct VideoPlayerCellView: View {
     var body: some View {
         ZStack {
             buildVideoPlayer()
-    
+        
             VStack {
                 buildUpperSection()
                     .padding(.horizontal)
@@ -41,26 +41,30 @@ struct VideoPlayerCellView: View {
                     listTags()
                     listWhoReacted()
                     commentsSectionBuilder()
-                        .padding(.bottom,  70)
+                        .padding(.bottom, 70)
                 }
                 .padding(.horizontal)
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity) // ← ADD THIS
+        .ignoresSafeArea() // ← ADD THIS
         .navigationBarHidden(true)
     }
-    
+
     @ViewBuilder
     private func buildVideoPlayer() -> some View {
         ZStack {
-            VideoPlayer(player: vm.player)
-                .disabled(true)
-                .ignoresSafeArea()
-                .onChange(of: vm.isActive) { oldValue, newValue in
-                    vm.handleActiveStateChange(isActive: newValue)
-                }
-                .onAppear {
-                    vm.handleActiveStateChange(isActive: vm.isActive)
-                }
+            VideoPlayerViewWrapper(player: vm.player)
+                  .disabled(true)
+                  .frame(maxWidth: .infinity, maxHeight: .infinity)
+                  .ignoresSafeArea()
+                  .onChange(of: vm.isActive) { oldValue, newValue in
+                      vm.handleActiveStateChange(isActive: newValue)
+                  }
+                  .onAppear {
+                      vm.handleActiveStateChange(isActive: vm.isActive)
+                  }
+                
             
             VStack {
                 HStack {
@@ -89,6 +93,8 @@ struct VideoPlayerCellView: View {
                 Spacer()
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .ignoresSafeArea()
     }
     
     @ViewBuilder
@@ -334,5 +340,24 @@ struct VideoPlayerCellView: View {
             }
             .padding(.trailing, 8)
         }
+    }
+}
+
+
+struct VideoPlayerViewWrapper: UIViewControllerRepresentable {
+    
+    
+    let player: AVPlayer
+    
+    func makeUIViewController(context: Context) -> AVPlayerViewController {
+        let controller = AVPlayerViewController()
+        controller.player = player
+        controller.showsPlaybackControls = false
+        controller.videoGravity = .resizeAspectFill
+        return controller
+    }
+    
+    func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) {
+        uiViewController.player = player
     }
 }

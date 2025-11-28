@@ -29,11 +29,7 @@ class APIService {
             }
             .eraseToAnyPublisher()
     }
-}
-
-
-// MARK: - Tag Service Extension
-extension APIService {
+    
     func fetchAllTags() -> AnyPublisher<[TagItem], Error> {
         let urlString = "\(baseURL)/tags"
         
