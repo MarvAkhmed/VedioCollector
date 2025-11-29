@@ -63,14 +63,13 @@ struct CachedAsyncImage<Content: View, Placeholder: View>: View {
     }
 }
 
-// Image Cache for memory efficiency
 class ImageCache {
     static let shared = ImageCache()
     private let cache = NSCache<NSString, UIImage>()
     
     private init() {
         cache.countLimit = 100
-        cache.totalCostLimit = 50 * 1024 * 1024 // 50MB limit
+        cache.totalCostLimit = 50 * 1024 * 1024
     }
     
     func get(forKey key: String) -> UIImage? {
